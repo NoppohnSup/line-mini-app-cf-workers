@@ -2,15 +2,15 @@ import { flattenError } from 'zod'
 
 import { getDatabase } from '@/lib/db'
 import { registrations } from '@/lib/db/schema/registrations'
-import { getUserProfile, verifyAccessToken } from '@/lib/line/login'
-
-import { RegisterBodySchema } from './schema'
+import { serviceMessages } from '@/lib/db/schema/serviceMessages'
 import { issueStatelessChannelAccessToken } from '@/lib/line/accessToken'
+import { getUserProfile, verifyAccessToken } from '@/lib/line/login'
 import {
   issueServiceNotificationToken,
   sendServiceMessage,
 } from '@/lib/line/mini'
-import { serviceMessages } from '@/lib/db/schema/serviceMessages'
+
+import { RegisterBodySchema } from './schema'
 
 export const POST = async (request: Request) => {
   const { json, headers } = request
