@@ -1,17 +1,16 @@
-import { eq } from 'drizzle-orm'
 import { flattenError } from 'zod'
 
 import { getDatabase } from '@/lib/db'
 import { registrations } from '@/lib/db/schema/registrations'
-import { serviceMessages } from '@/lib/db/schema/serviceMessages'
-import { issueStatelessChannelAccessToken } from '@/lib/line/accessToken'
 import { getUserProfile, verifyAccessToken } from '@/lib/line/login'
+
+import { RegisterBodySchema } from './schema'
+import { issueStatelessChannelAccessToken } from '@/lib/line/accessToken'
 import {
   issueServiceNotificationToken,
   sendServiceMessage,
 } from '@/lib/line/mini'
-
-import { RegisterBodySchema } from './schema'
+import { serviceMessages } from '@/lib/db/schema/serviceMessages'
 
 export const POST = async (request: Request) => {
   const { json, headers } = request
@@ -62,10 +61,10 @@ export const POST = async (request: Request) => {
     return Response.json({ error: 'Failed to register user' }, { status: 500 })
   }
 
-  // Issue stateless channel access token
+  // TODO: Issue stateless channel access token
   const statelessToken = await issueStatelessChannelAccessToken()
 
-  // Issue service notification token
+  // TODO: Issue service notification token
   const serviceNotificationTokenResponse = await issueServiceNotificationToken(
     statelessToken,
     accessToken,
@@ -98,14 +97,19 @@ export const POST = async (request: Request) => {
     )
   }
 
-  // Add function to send service message
+  //   {
+  //   "btn1_url": "https://line.me",
+  //   "entry_date": "31/03/2033 0:00 น. "
+  // }
+  // join_d_m_th
+  // TODO: Add function to send service message
   const sentServiceMessage = await sendServiceMessage(
     statelessToken,
     serviceNotificationTokenResponse.notificationToken,
     'join_d_m_th',
     {
       btn1_url: 'https://line.me',
-      entry_date: '31/03/2033 0:00 น.',
+      entry_date: '31/03/2033 0:00 น. ',
     },
   )
 
